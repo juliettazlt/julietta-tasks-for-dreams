@@ -27,8 +27,8 @@ const mockRecentActivity = [
 
 const Index = () => {
   const handleDonate = () => {
-    // This would normally open the auth modal or redirect to signup
-    alert("🎉 Authentication coming soon! Connect Supabase to enable full functionality.");
+    // Placeholder for donation functionality
+    console.log("Donate button clicked");
   };
 
   return (
