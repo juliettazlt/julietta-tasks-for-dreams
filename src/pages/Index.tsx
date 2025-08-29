@@ -1,6 +1,9 @@
 import { HeroCard } from "@/components/HeroCard";
 import { MilestoneCard } from "@/components/MilestoneCard";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for the landing page demo
 const mockMilestones = [
@@ -26,14 +29,33 @@ const mockRecentActivity = [
 ];
 
 const Index = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
   const handleDonate = () => {
-    // Placeholder for donation functionality
-    console.log("Donate button clicked");
+    // If user is not authenticated, redirect to auth page
+    if (!user) {
+      navigate('/auth');
+    } else {
+      // TODO: Implement actual donation/task functionality
+      console.log("User is authenticated, implement task system here");
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
+        {/* Header with user info and sign out */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-xl font-semibold">Welcome back!</h2>
+            <p className="text-muted-foreground">{user?.email}</p>
+          </div>
+          <Button variant="outline" onClick={signOut}>
+            Sign Out
+          </Button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Hero Card */}
           <div className="lg:col-span-2">
