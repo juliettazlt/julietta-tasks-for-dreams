@@ -1,0 +1,193 @@
+# Cursor AI Development Rules
+
+## 🎯 Core Development Philosophy
+- **Simplicity first** - Always choose the simplest solution that works
+- **Quality over speed** - Take time to write clean, maintainable code
+- **Consistency** - Follow established patterns in the codebase
+
+## 📦 Technology Stack (LOCKED)
+**NEVER add new packages. Use ONLY these existing tools:**
+
+### Frontend
+- React 18 + TypeScript
+- Vite (build tool)
+- Tailwind CSS (styling)
+- shadcn/ui (UI components)
+- Radix UI (headless primitives)
+- Lucide React (icons)
+
+### Backend & Data
+- Supabase (database + auth)
+- React Query (data fetching)
+
+### Utilities
+- date-fns (date operations)
+- React Hook Form + Zod (forms + validation)
+- Sonner (notifications)
+- React Router DOM (routing)
+
+## 🚫 STRICT PROHIBITIONS
+
+### Package Management
+- ❌ NEVER suggest installing new packages
+- ❌ NEVER use npm install, yarn add, or any package managers
+- ❌ If existing tools can't solve something, explain limitations instead of adding packages
+- ✅ Be creative within existing constraints
+
+### Code Duplication
+- ❌ NEVER duplicate existing code when adding new features
+- ❌ NEVER rewrite existing functions unless explicitly requested
+- ✅ Always check for existing utilities in `/src/lib/utils.ts`
+- ✅ Reuse existing components from `/src/components/`
+- ✅ Extract common logic into reusable functions
+
+### File Management
+- ❌ NEVER overwrite `.env` files
+- ❌ NEVER create scripts that will only run once
+- ❌ NEVER write inline scripts in components if avoidable
+- ✅ Put reusable logic in appropriate utility files
+
+### File Size Limits
+- ❌ NEVER create files over 200-300 lines
+- ✅ Split large files into smaller, focused modules
+- ✅ Extract components when files get too large
+- ✅ Use composition over large monolithic components
+
+## ✅ DEVELOPMENT BEST PRACTICES
+
+### Code Changes
+- **Surgical precision** - Only make changes that are explicitly requested
+- **Related changes only** - If adding feature X, only modify code related to X
+- **Confidence requirement** - Only make changes you fully understand
+- **Ask before major refactors** - Get permission before restructuring
+
+### Environment Separation
+- **Development** - Use development data and settings
+- **Test** - Use test data and mocked services ONLY for testing
+- **Production** - Use real data and production settings
+- ❌ NEVER mix environments or use production data in development
+
+### Data Handling
+- ✅ **Mock data for tests ONLY** - Use in test files and test environments
+- ❌ **NEVER use mock data in development or production**
+- ✅ Use Supabase for all real data needs
+- ✅ Use TypeScript interfaces for data structure
+
+### Component Architecture
+```typescript
+// ✅ GOOD: Small, focused components
+const TaskCard = ({ task }: { task: Task }) => {
+  return <Card>...</Card>
+}
+
+// ❌ BAD: Giant components doing everything
+const MegaTaskDashboardWithEverything = () => {
+  // 300+ lines of code
+}
+```
+
+### File Organization
+```
+src/
+├── components/
+│   ├── ui/              # shadcn/ui components only
+│   ├── TaskCard.tsx     # ✅ Small, focused (< 100 lines)
+│   └── TaskList.tsx     # ✅ Single responsibility
+├── pages/
+│   ├── Dashboard.tsx    # ✅ Page-level component
+│   └── Settings.tsx     # ✅ Another page
+├── lib/
+│   ├── utils.ts         # ✅ Shared utilities
+│   └── api.ts           # ✅ API functions
+└── hooks/
+    ├── useTask.ts       # ✅ Custom hooks
+    └── useAuth.ts       # ✅ Reusable logic
+```
+
+## 🎨 UI/Design Guidelines
+
+### Styling Rules
+- ✅ **Tailwind CSS ONLY** - No custom CSS files
+- ✅ **shadcn/ui components** - Use as building blocks
+- ✅ **Customize through props** - Extend components via className
+- ❌ NO inline styles or styled-components
+
+### Design Consistency
+- ✅ Use Tailwind's design tokens (spacing, colors, typography)
+- ✅ Follow shadcn/ui design patterns
+- ✅ Maintain consistent spacing and typography scales
+- ❌ NO random pixel values or custom breakpoints
+
+### Component Reusability
+```tsx
+// ✅ GOOD: Flexible, reusable component
+const StatusBadge = ({ status, className }: StatusBadgeProps) => (
+  <Badge className={cn("capitalize", className)} variant={getVariant(status)}>
+    {status}
+  </Badge>
+)
+
+// ❌ BAD: Hardcoded, single-use component
+const CompletedTaskBadge = () => (
+  <div style={{ backgroundColor: 'green', padding: '4px' }}>
+    Completed
+  </div>
+)
+```
+
+## 🔍 Problem-Solving Approach
+
+### When Implementing New Features:
+1. **Survey existing code** - What similar patterns exist?
+2. **Reuse existing components** - Can shadcn/ui components be composed?
+3. **Extend, don't rebuild** - Modify existing utilities instead of creating new ones
+4. **Test with existing tools** - Use React Testing Library + Vitest
+
+### When Debugging:
+1. **Check existing code first** - Is there already a solution?
+2. **Use browser dev tools** - Debug with built-in tools
+3. **Console.log strategically** - Don't install debug packages
+4. **Fix root cause** - Don't add packages to work around issues
+
+### When Optimizing:
+1. **Use React dev tools** - Analyze performance with existing tools
+2. **Optimize existing code** - Improve what's there before adding new tools
+3. **Leverage React Query** - Use existing caching and data management
+
+## 🚨 Emergency Exceptions
+
+**Only break these rules if:**
+- Security vulnerability requires immediate package update
+- Supabase changes require client library update
+- Core React/Vite ecosystem updates are needed
+
+**Process for exceptions:**
+1. Document the critical need
+2. Choose minimal, focused package
+3. Set removal date if temporary
+4. Update this rules file
+
+## 💬 Communication with AI Assistants
+
+**Always remind AI assistants:**
+```
+"Follow the package policy in .cursorrules - use ONLY existing packages. 
+No new installations. Be creative within current constraints."
+```
+
+**Example responses you want:**
+- ✅ "Let's build this using shadcn/ui Dialog + Tailwind animations"
+- ❌ "Let's install react-modal for this feature"
+
+## 🎯 Success Metrics
+
+**This approach succeeds when:**
+- Package.json stays stable over time
+- Bundle size remains small
+- Code patterns are consistent
+- New developers can understand the codebase quickly
+- Features are built faster (no research on new packages)
+
+---
+
+*Remember: Constraints breed creativity. Having fewer tools forces you to master the ones you have.*

@@ -1,11 +1,15 @@
+import { useState, useRef } from "react";
 import { HeroCard } from "@/components/HeroCard";
 import { MilestoneCard } from "@/components/MilestoneCard";
-import { LeaderboardCard } from "@/components/LeaderboardCard";
+import { TaskCard } from "@/components/TaskCard";
+import { TodoList } from "@/components/TodoList";
+import { UnlockAnimation } from "@/components/UnlockAnimation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Mock data for the landing page demo
+// Mock data for the dashboard
 const mockMilestones = [
   { id: 1, title: "Capybara Cafe Visit", threshold: 100, unlocked: true, current: false },
   { id: 2, title: "Omakase Experience", threshold: 300, unlocked: false, current: true },
@@ -14,32 +18,111 @@ const mockMilestones = [
   { id: 5, title: "Amsterdam Trip", threshold: 1000, unlocked: false, current: false },
 ];
 
-const mockTopHelpers = [
-  { nickname: "sarah_j", points: 120, rank: 1 },
-  { nickname: "mike_runner", points: 95, rank: 2 },
-  { nickname: "yoga_anna", points: 80, rank: 3 },
-  { nickname: "tom_hikes", points: 65, rank: 4 },
+const initialTasks = [
+  { 
+    id: 1, 
+    title: "Daily Run", 
+    description: "Complete your daily run to unlock other tasks", 
+    points: 10, 
+    completed: false, 
+    cooldown: "once/day",
+    isGatekeeper: true,
+    isLocked: false,
+    type: 'run' as const
+  },
+  { 
+    id: 2, 
+    title: "Selfie", 
+    description: "Send a post-workout selfie to Julietta", 
+    points: 10, 
+    completed: false, 
+    cooldown: "once/day",
+    isLocked: true,
+    type: 'selfie' as const
+  },
+  { 
+    id: 3, 
+    title: "Mood Check", 
+    description: "Log your mood for the day", 
+    points: 10, 
+    completed: false, 
+    cooldown: "once/day",
+    isLocked: true,
+    type: 'mood' as const
+  },
+  { 
+    id: 4, 
+    title: "Add Personal To-do", 
+    description: "Add one item to your personal to-do list", 
+    points: 10, 
+    completed: false, 
+    cooldown: "once/day",
+    isLocked: true,
+    type: 'todo' as const
+  },
+  { 
+    id: 5, 
+    title: "Log Today's Weather", 
+    description: "What's the weather like where you are?", 
+    points: 10, 
+    completed: false, 
+    cooldown: "once/day",
+    isLocked: true,
+    type: 'weather' as const
+  },
 ];
 
-const mockRecentActivity = [
-  { nickname: "sarah_j", task: "Morning Run", points: 10, timeAgo: "2 min ago" },
-  { nickname: "mike_runner", task: "Selfie", points: 10, timeAgo: "5 min ago" },
-  { nickname: "yoga_anna", task: "Mood Check", points: 10, timeAgo: "12 min ago" },
-  { nickname: "tom_hikes", task: "Added Todo", points: 10, timeAgo: "15 min ago" },
+const mockTodos = [
+  { id: 1, title: "Call mom", completed: false },
+  { id: 2, title: "Buy groceries", completed: true },
+  { id: 3, title: "Read a book", completed: false },
 ];
 
 const Index = () => {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const [tasks, setTasks] = useState(initialTasks);
+  const [totalPoints, setTotalPoints] = useState(265);
+  const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
+  const tasksSectionRef = useRef<HTMLDivElement>(null);
 
   const handleDonate = () => {
-    // If user is not authenticated, redirect to auth page
-    if (!user) {
-      navigate('/auth');
-    } else {
-      // TODO: Implement actual donation/task functionality
-      console.log("User is authenticated, implement task system here");
+    // Scroll to the tasks section
+    if (tasksSectionRef.current) {
+      tasksSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
+  };
+
+  const handleTaskComplete = (taskId: number) => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => {
+        if (task.id === taskId) {
+          // Mark the completed task as done
+          return { ...task, completed: true };
+        } else if (task.isLocked && taskId === 1) {
+          // If run task (id: 1) was completed, unlock other tasks
+          return { ...task, isLocked: false };
+        }
+        return task;
+      })
+    );
+
+    // Update total points
+    const completedTask = tasks.find(t => t.id === taskId);
+    if (completedTask) {
+      setTotalPoints(prev => prev + completedTask.points);
+    }
+
+    // Show unlock animation if run task was completed
+    if (taskId === 1) {
+      setShowUnlockAnimation(true);
+    }
+  };
+
+  const handleUnlockAnimationComplete = () => {
+    setShowUnlockAnimation(false);
   };
 
   return (
@@ -57,28 +140,64 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Hero Card */}
-          <div className="lg:col-span-2">
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Hero Card */}
             <HeroCard 
-              totalRaised={265}
+              totalRaised={totalPoints}
               goal={1000}
               helpersCount={12}
               onDonate={handleDonate}
             />
+
+            {/* Tasks and Todos Tabs */}
+            <div ref={tasksSectionRef}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Tasks & Goals</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="tasks" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="tasks">Daily Tasks</TabsTrigger>
+                      <TabsTrigger value="todos">Personal To-dos</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="tasks" className="space-y-4">
+                      <div className="grid gap-4">
+                        {tasks.map((task) => (
+                          <TaskCard 
+                            key={task.id} 
+                            task={task} 
+                            onTaskComplete={handleTaskComplete}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="todos">
+                      <TodoList todos={mockTodos} />
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
-          {/* Right Sidebar */}
+          {/* Right Sidebar - Milestones Only */}
           <div className="space-y-6">
             <MilestoneCard 
               milestones={mockMilestones}
-              currentAmount={265}
-            />
-            <LeaderboardCard 
-              topHelpers={mockTopHelpers}
-              recentActivity={mockRecentActivity}
+              currentAmount={totalPoints}
             />
           </div>
         </div>
+
+        {/* Unlock Animation */}
+        <UnlockAnimation 
+          isVisible={showUnlockAnimation}
+          onAnimationComplete={handleUnlockAnimationComplete}
+        />
       </div>
     </div>
   );
