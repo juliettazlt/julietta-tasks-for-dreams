@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 // Mock data for the landing page demo
 const mockMilestones = [
-  { id: 1, title: "Pet a capybara", threshold: 50, unlocked: true, current: false },
-  { id: 2, title: "Complete a 200-hour yoga teacher certificate", threshold: 100, unlocked: false, current: true },
-  { id: 3, title: "Buy a sewing machine and make my own clothes", threshold: 300, unlocked: false, current: false },
-  { id: 4, title: "Visit all my friends around the US and the world", threshold: 500, unlocked: false, current: false },
-  { id: 5, title: "Move to NYC :)", threshold: 750, unlocked: false, current: false },
-  { id: 6, title: "Be brave, be curious", threshold: 1000, unlocked: false, current: false },
+  { id: 1, title: "Pet a capybara", threshold: 50 },
+  { id: 2, title: "Complete a 200-hour yoga teacher certificate", threshold: 100 },
+  { id: 3, title: "Buy a sewing machine and make my own clothes", threshold: 300 },
+  { id: 4, title: "Visit all my friends around the US and the world", threshold: 500 },
+  { id: 5, title: "Move to NYC :)", threshold: 750 },
+  { id: 6, title: "Be brave, be curious", threshold: 1000 },
 ];
 
 const Landing = () => {
