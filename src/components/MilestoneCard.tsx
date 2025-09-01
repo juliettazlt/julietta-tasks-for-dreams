@@ -5,8 +5,6 @@ interface Milestone {
   id: number;
   title: string;
   threshold: number;
-  unlocked: boolean;
-  current?: boolean;
 }
 
 interface MilestoneCardProps {

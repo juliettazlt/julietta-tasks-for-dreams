@@ -26,19 +26,19 @@ const Landing = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Hero Card */}
           <div className="lg:col-span-2">
-            <HeroCard 
-              totalRaised={265}
-              goal={1000}
-              helpersCount={12}
-              onDonate={handleDonate}
-            />
+                          <HeroCard 
+                totalRaised={250}
+                goal={1000}
+                helpersCount={12}
+                onDonate={handleDonate}
+              />
           </div>
 
           {/* Right Sidebar - Milestones Only */}
           <div className="space-y-6">
             <MilestoneCard 
               milestones={mockMilestones}
-              currentAmount={265}
+              currentAmount={250}
             />
           </div>
         </div>

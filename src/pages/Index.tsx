@@ -82,7 +82,7 @@ const mockTodos = [
 const Index = () => {
   const { user, signOut } = useAuth();
   const [tasks, setTasks] = useState(initialTasks);
-  const [totalPoints, setTotalPoints] = useState(265);
+  const [totalPoints, setTotalPoints] = useState(250);
   const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
   const tasksSectionRef = useRef<HTMLDivElement>(null);
 
