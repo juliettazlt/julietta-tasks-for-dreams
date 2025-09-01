@@ -14,10 +14,10 @@ interface MilestoneCardProps {
 
 export const MilestoneCard = ({ milestones, currentAmount }: MilestoneCardProps) => {
   return (
-    <Card className="shadow-card bg-gradient-card">
+    <Card className="clean-card">
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4">🎂 Help Make Julietta's Birthday Dreams Come True!</h3>
-        <div className="space-y-3">
+        <h3 className="text-xl font-bold mb-6 text-gray-900">🎯 Birthday Goals</h3>
+        <div className="space-y-4">
           {milestones.map((milestone) => {
             const isUnlocked = currentAmount >= milestone.threshold;
             const isCurrent = !isUnlocked && (milestone.id === 1 || currentAmount >= milestones[milestone.id - 2]?.threshold);
@@ -25,22 +25,28 @@ export const MilestoneCard = ({ milestones, currentAmount }: MilestoneCardProps)
             return (
               <div 
                 key={milestone.id}
-                className={`flex items-center justify-between p-3 rounded-lg transition-smooth ${
+                className={`floating-card p-4 ${
                   isUnlocked 
-                    ? 'bg-secondary text-secondary-foreground' 
+                    ? 'bg-orange-500 text-white' 
                     : isCurrent
-                    ? 'bg-primary/10 border border-primary/20'
-                    : 'bg-muted/50 opacity-60 blur-[1px]'
+                    ? 'bg-gray-100 text-gray-900 border-2 border-orange-200'
+                    : 'bg-gray-50 text-gray-500'
                 }`}
               >
-                <span className={`font-medium ${
-                  isUnlocked ? '' : isCurrent ? 'text-primary' : ''
-                }`}>
-                  {isUnlocked ? '✅' : isCurrent ? '🎯' : '🔒'} {milestone.title}
-                </span>
-                <Badge variant={isUnlocked ? 'default' : 'secondary'}>
-                  ${milestone.threshold.toLocaleString()}
-                </Badge>
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm flex-1">
+                    {isUnlocked ? '✅' : isCurrent ? '🎯' : '🔒'} {milestone.title}
+                  </span>
+                  <Badge className={`text-xs ${
+                    isUnlocked 
+                      ? 'bg-white/20 text-white border-white/30' 
+                      : isCurrent
+                      ? 'bg-orange-100 text-orange-700 border-orange-200'
+                      : 'bg-gray-200 text-gray-500 border-gray-300'
+                  }`}>
+                    ${milestone.threshold.toLocaleString()}
+                  </Badge>
+                </div>
               </div>
             );
           })}

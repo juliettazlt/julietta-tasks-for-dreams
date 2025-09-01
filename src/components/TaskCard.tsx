@@ -70,7 +70,7 @@ export const TaskCard = ({ task, onTaskComplete }: TaskCardProps) => {
   const handleWeatherSubmit = () => {
     if (selectedWeather) {
       setShowWeatherSelector(false);
-      completeTask(selectedWeather);
+      completeTask(undefined, selectedWeather);
     }
   };
 
@@ -204,14 +204,22 @@ export const TaskCard = ({ task, onTaskComplete }: TaskCardProps) => {
         <CardContent>
           <p className="text-muted-foreground mb-4">{task.description}</p>
           {!task.completed && (
-            <Button 
-              onClick={handleComplete}
-              className="w-full"
-              variant="default"
-              disabled={isCompleting}
-            >
-              {isCompleting ? "Completing..." : "Complete Task"}
-            </Button>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">Mark as complete</span>
+              <button 
+                onClick={handleComplete}
+                disabled={isCompleting}
+                className={`w-12 h-6 rounded-full transition-all duration-200 flex items-center ${
+                  isCompleting 
+                    ? 'bg-gray-300 cursor-not-allowed' 
+                    : 'bg-gray-200 hover:bg-gray-300 cursor-pointer'
+                }`}
+              >
+                <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-200 transform ${
+                  isCompleting ? 'translate-x-6' : 'translate-x-1'
+                }`} />
+              </button>
+            </div>
           )}
           {task.completed && (
             <div className="text-center text-green-600 font-medium">
