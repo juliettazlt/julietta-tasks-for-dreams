@@ -11,11 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Mock data for the dashboard
 const mockMilestones = [
-  { id: 1, title: "Capybara Cafe Visit", threshold: 100, unlocked: true, current: false },
-  { id: 2, title: "Omakase Experience", threshold: 300, unlocked: false, current: true },
-  { id: 3, title: "New Jeans Shopping", threshold: 500, unlocked: false, current: false },
-  { id: 4, title: "Zoo Adventure", threshold: 750, unlocked: false, current: false },
-  { id: 5, title: "Amsterdam Trip", threshold: 1000, unlocked: false, current: false },
+  { id: 1, title: "Complete a 200-hour yoga teacher certificate", threshold: 100, unlocked: true, current: false },
+  { id: 2, title: "Buy a sewing machine and make my own clothes", threshold: 300, unlocked: false, current: true },
+  { id: 3, title: "Visit all my friends around the US and the world", threshold: 500, unlocked: false, current: false },
+  { id: 4, title: "Move to NYC :)", threshold: 750, unlocked: false, current: false },
+  { id: 5, title: "Be brave, be curious", threshold: 1000, unlocked: false, current: false },
 ];
 
 const initialTasks = [
