@@ -18,7 +18,7 @@ export const MilestoneCard = ({ milestones, currentAmount }: MilestoneCardProps)
   return (
     <Card className="shadow-card bg-gradient-card">
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4">🎯 Birthday Goals</h3>
+        <h3 className="text-lg font-semibold mb-4">🌟 Julietta's 24-Year-Old Wishlist</h3>
         <div className="space-y-3">
           {milestones.map((milestone) => (
             <div 
