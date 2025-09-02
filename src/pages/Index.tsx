@@ -4,6 +4,7 @@ import { MilestoneCard } from "@/components/MilestoneCard";
 import { TaskCard } from "@/components/TaskCard";
 import { TodoList } from "@/components/TodoList";
 import { UnlockAnimation } from "@/components/UnlockAnimation";
+import { RecentHelpersCard } from "@/components/RecentHelpersCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -83,7 +84,53 @@ const mockTodos = [
 
 const Index = () => {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const [tasks, setTasks] = useState(initialTasks);
+  const [totalPoints, setTotalPoints] = useState(250);
+  const [userPoints, setUserPoints] = useState(0);
+  const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
+  const [completedTaskIds, setCompletedTaskIds] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const tasksSectionRef = useRef<HTMLDivElement>(null);
+
+  // Load user data on component mount
+  useEffect(() => {
+    if (user) {
+      loadUserData();
+    }
+  }, [user]);
+
+  const loadUserData = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Load user progress
+      const userProgress = await UserProgressService.getUserProgress(user!.id);
+      setUserPoints(userProgress.total_points);
+      
+      // Load completed tasks
+      const completedTasks = await UserProgressService.getCompletedTasks(user!.id);
+      const completedIds = completedTasks.map(task => task.task_id);
+      setCompletedTaskIds(completedIds);
+      
+      // Update tasks with completion status
+      setTasks(prevTasks => 
+        prevTasks.map(task => ({
+          ...task,
+          completed: completedIds.includes(task.id)
+        }))
+      );
+      
+      // Load total points across all users
+      const totalPoints = await UserProgressService.getTotalPoints();
+      setTotalPoints(250 + totalPoints); // Base 250 + user contributions
+      
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      toast.error('Failed to load user data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleDonate = () => {
     // Scroll to the tasks section
@@ -214,12 +261,13 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right Sidebar - Milestones Only */}
+          {/* Right Sidebar */}
           <div className="space-y-6">
             <MilestoneCard 
               milestones={mockMilestones}
               currentAmount={totalPoints}
             />
+            <RecentHelpersCard />
           </div>
         </div>
 
