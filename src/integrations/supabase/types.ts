@@ -7,14 +7,54 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
-  }
   public: {
     Tables: {
-      [_ in never]: never
+      user_progress: {
+        Row: {
+          id: string
+          user_id: string
+          total_points: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          total_points?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          total_points?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      completed_tasks: {
+        Row: {
+          id: string
+          user_id: string
+          task_id: number
+          completed_at: string
+          points_earned: number
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          task_id: number
+          completed_at?: string
+          points_earned: number
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          task_id?: number
+          completed_at?: string
+          points_earned?: number
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,9 +63,6 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
       [_ in never]: never
     }
   }

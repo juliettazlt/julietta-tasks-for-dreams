@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { HeroCard } from "@/components/HeroCard";
 import { MilestoneCard } from "@/components/MilestoneCard";
 import { TaskCard } from "@/components/TaskCard";
@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserProgressService } from "@/integrations/supabase/userProgress";
+import { toast } from "sonner";
 
 // Mock data for the dashboard
 const mockMilestones = [
@@ -81,10 +83,7 @@ const mockTodos = [
 
 const Index = () => {
   const { user, signOut } = useAuth();
-  const [tasks, setTasks] = useState(initialTasks);
-  const [totalPoints, setTotalPoints] = useState(250);
-  const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
-  const tasksSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const handleDonate = () => {
     // Scroll to the tasks section
@@ -96,35 +95,64 @@ const Index = () => {
     }
   };
 
-  const handleTaskComplete = (taskId: number) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => {
-        if (task.id === taskId) {
-          // Mark the completed task as done
-          return { ...task, completed: true };
-        } else if (task.isLocked && taskId === 1) {
-          // If run task (id: 1) was completed, unlock other tasks
-          return { ...task, isLocked: false };
-        }
-        return task;
-      })
-    );
+  const handleTaskComplete = async (taskId: number) => {
+    if (!user) return;
 
-    // Update total points
-    const completedTask = tasks.find(t => t.id === taskId);
-    if (completedTask) {
-      setTotalPoints(prev => prev + completedTask.points);
-    }
+    try {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
 
-    // Show unlock animation if run task was completed
-    if (taskId === 1) {
-      setShowUnlockAnimation(true);
+      // Complete task in backend
+      await UserProgressService.completeTask(user.id, taskId, task.points);
+      
+      // Update local state
+      setTasks(prevTasks => 
+        prevTasks.map(t => {
+          if (t.id === taskId) {
+            return { ...t, completed: true };
+          } else if (t.isLocked && taskId === 1) {
+            // If run task (id: 1) was completed, unlock other tasks
+            return { ...t, isLocked: false };
+          }
+          return t;
+        })
+      );
+
+      setCompletedTaskIds(prev => [...prev, taskId]);
+      setUserPoints(prev => prev + task.points);
+      setTotalPoints(prev => prev + task.points);
+
+      // Show unlock animation if run task was completed
+      if (taskId === 1) {
+        setShowUnlockAnimation(true);
+      }
+
+      toast.success(`🎉 Task completed! +$${task.points} donated to Julietta's birthday dreams!`);
+
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Task already completed') {
+        toast.error('This task has already been completed');
+      } else {
+        console.error('Error completing task:', error);
+        toast.error('Failed to complete task');
+      }
     }
   };
 
   const handleUnlockAnimationComplete = () => {
     setShowUnlockAnimation(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your progress...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -134,6 +162,7 @@ const Index = () => {
           <div>
             <h2 className="text-xl font-semibold">Welcome back!</h2>
             <p className="text-muted-foreground">{user?.email}</p>
+            <p className="text-sm text-orange-600">Your contribution: ${userPoints}</p>
           </div>
           <Button variant="outline" onClick={signOut}>
             Sign Out
