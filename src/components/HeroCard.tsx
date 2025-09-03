@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ProgressBar } from "./ProgressBar";
+import heroImage from "@/assets/birthday-hero.jpg";
 
 interface HeroCardProps {
   totalRaised: number;
@@ -10,47 +13,42 @@ interface HeroCardProps {
 }
 
 export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCardProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Using your converted JPEG images from the public folder
-  const images = [
-    '/IMG_7124.jpeg',
-    '/IMG_7144.jpeg',
-    '/IMG_7146.jpeg'
+  // Beautiful gradient backgrounds
+  const gradients = [
+    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % gradients.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [gradients.length]);
 
   const progress = Math.min((totalRaised / goal) * 100, 100);
 
   return (
     <Card className="clean-card overflow-hidden relative">
-      {/* Background Carousel */}
+      {/* Gradient Carousel Background */}
       <div className="absolute inset-0">
-        {images.map((image, index) => (
+        {gradients.map((gradient, index) => (
           <div
-            key={image}
+            key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
-          >
-            <img
-              src={image}
-              alt={`Birthday celebration ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
+            style={{ background: gradient }}
+          />
         ))}
       </div>
       
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
       <CardContent className="p-6 space-y-6 relative z-10">
@@ -96,7 +94,7 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
         <div className="text-center">
           <Button 
             onClick={onDonate}
-            className="clean-button bg-white text-orange-600 hover:bg-gray-100 shadow-lg"
+            className="clean-button bg-white text-gray-800 hover:bg-gray-100 shadow-lg"
           >
             🎁 Start Helping
           </Button>
@@ -107,12 +105,12 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
 
         {/* Carousel indicators */}
         <div className="flex justify-center space-x-2 mt-4">
-          {images.map((_, index) => (
+          {gradients.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentImageIndex(index)}
+              onClick={() => setCurrentIndex(index)}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentImageIndex 
+                index === currentIndex 
                   ? 'bg-white scale-125' 
                   : 'bg-white/50 hover:bg-white/70'
               }`}
