@@ -1,8 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ProgressBar } from "./ProgressBar";
-import heroImage from "@/assets/birthday-hero.jpg";
 
 interface HeroCardProps {
   totalRaised: number;
@@ -16,15 +13,29 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
 
   return (
     <Card className="clean-card overflow-hidden relative">
-      {/* Beautiful gradient background that will definitely work */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600">
-        {/* Add some subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }} />
+      {/* Single Image Background */}
+      <div className="absolute inset-0">
+        <img
+          src="/IMG_7124.jpeg"
+          alt="Julietta's Birthday Celebration"
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error('Image failed to load, falling back to gradient');
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+          }}
+        />
+        {/* Fallback gradient if image fails */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px'
+            }} />
+          </div>
         </div>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Content */}
