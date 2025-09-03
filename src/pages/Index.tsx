@@ -114,12 +114,18 @@ const Index = () => {
       const completedIds = completedTasks.map(task => task.task_id);
       setCompletedTaskIds(completedIds);
       
-      // Update tasks with completion status
+      // Update tasks with completion status and unlock logic
       setTasks(prevTasks => 
-        prevTasks.map(task => ({
-          ...task,
-          completed: completedIds.includes(task.id)
-        }))
+        prevTasks.map(task => {
+          const isCompleted = completedIds.includes(task.id);
+          const shouldUnlock = task.isLocked && completedIds.includes(1); // Unlock if run task (id: 1) is completed
+          
+          return {
+            ...task,
+            completed: isCompleted,
+            isLocked: task.isLocked && !shouldUnlock // Keep locked unless run task is completed
+          };
+        })
       );
       
       // Load total points across all users
