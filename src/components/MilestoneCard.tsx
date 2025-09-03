@@ -16,7 +16,7 @@ export const MilestoneCard = ({ milestones, currentAmount }: MilestoneCardProps)
   return (
     <Card className="clean-card">
       <CardContent className="p-6">
-        <h3 className="text-xl font-bold mb-6 text-gray-900">🎂 My 24th Year Goals</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-900">🎂 Help unlock Julietta's 24th's wishlist</h3>
         <div className="space-y-4">
           {milestones.map((milestone) => {
             const isUnlocked = currentAmount >= milestone.threshold;
