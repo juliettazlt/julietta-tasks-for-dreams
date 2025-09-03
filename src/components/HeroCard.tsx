@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ProgressBar } from "./ProgressBar";
-import heroImage from "@/assets/birthday-hero.jpg";
 
 interface HeroCardProps {
   totalRaised: number;
@@ -13,42 +10,20 @@ interface HeroCardProps {
 }
 
 export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCardProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Beautiful gradient backgrounds
-  const gradients = [
-    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % gradients.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [gradients.length]);
-
   const progress = Math.min((totalRaised / goal) * 100, 100);
 
   return (
     <Card className="clean-card overflow-hidden relative">
-      {/* Gradient Carousel Background */}
+      {/* Single Image Background */}
       <div className="absolute inset-0">
-        {gradients.map((gradient, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ background: gradient }}
-          />
-        ))}
+        <img
+          src="/IMG_7124.jpeg"
+          alt="Julietta's Birthday Celebration"
+          className="w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
-      
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
       <CardContent className="p-6 space-y-6 relative z-10">
@@ -101,21 +76,6 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
           <p className="text-xs text-white/70 mt-3">
             Complete tasks to donate symbolic dollars - no real money involved
           </p>
-        </div>
-
-        {/* Carousel indicators */}
-        <div className="flex justify-center space-x-2 mt-4">
-          {gradients.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? 'bg-white scale-125' 
-                  : 'bg-white/50 hover:bg-white/70'
-              }`}
-            />
-          ))}
         </div>
       </CardContent>
     </Card>
