@@ -1,5 +1,9 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ProgressBar } from "./ProgressBar";
+import heroImage from "@/assets/birthday-hero.jpg";
 
 interface HeroCardProps {
   totalRaised: number;
@@ -9,56 +13,91 @@ interface HeroCardProps {
 }
 
 export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCardProps) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const images = [
+    '/IMG_7124.jpeg',
+    '/IMG_7144.jpeg',
+    '/IMG_7146.jpeg'
+  ];
+
+  useEffect(() => {
+    if (!isHovered) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [images.length, isHovered]);
+
   const progress = Math.min((totalRaised / goal) * 100, 100);
 
   return (
-    <Card className="clean-card overflow-hidden relative">
-      {/* Single Image Background */}
-      <div className="absolute inset-0">
-        <img
-          src="/IMG_7124.jpeg"
-          alt="Julietta's Birthday Celebration"
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            console.error('Image failed to load, falling back to gradient');
-            e.currentTarget.style.display = 'none';
-            e.currentTarget.nextElementSibling?.classList.remove('hidden');
-          }}
-        />
-        {/* Fallback gradient if image fails */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: '60px 60px'
-            }} />
+    <Card 
+      className="clean-card overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Image Carousel Section */}
+      <div className="relative h-64 overflow-hidden">
+        {images.map((image, index) => (
+          <div
+            key={image}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img
+              src={image}
+              alt={`Birthday celebration ${index + 1}`}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Image failed to load:', image);
+                e.currentTarget.style.display = 'none';
+              }}
+            />
           </div>
+        ))}
+        
+        {/* Carousel indicators */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentImageIndex 
+                  ? 'bg-white scale-125' 
+                  : 'bg-white/50 hover:bg-white/70'
+              }`}
+            />
+          ))}
         </div>
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* Content */}
-      <CardContent className="p-6 space-y-6 relative z-10">
+      {/* Content Section */}
+      <CardContent className="p-6 space-y-6">
         <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-gray-900">
             🎂 Help Celebrate Julietta's Birthday!
           </h1>
-          <p className="text-white/90">
+          <p className="text-gray-600">
             Complete daily tasks to donate symbolic dollars toward her birthday dreams
           </p>
         </div>
 
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-white/90">Progress</span>
-            <span className="text-sm text-white/80">
+            <span className="text-sm font-medium text-gray-700">Progress</span>
+            <span className="text-sm text-gray-500">
               ${totalRaised.toLocaleString()} of ${goal.toLocaleString()}
             </span>
           </div>
-          <div className="progress-clean bg-white/20">
+          <div className="progress-clean">
             <div 
-              className="progress-fill-clean bg-white" 
+              className="progress-fill-clean" 
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -66,27 +105,27 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
 
         <div className="flex justify-center gap-12 text-center">
           <div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-gray-900">
               ${totalRaised.toLocaleString()}
             </div>
-            <div className="text-sm text-white/80">raised</div>
+            <div className="text-sm text-gray-500">raised</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-gray-900">
               {helpersCount}
             </div>
-            <div className="text-sm text-white/80">helpers</div>
+            <div className="text-sm text-gray-500">helpers</div>
           </div>
         </div>
 
         <div className="text-center">
           <Button 
             onClick={onDonate}
-            className="clean-button bg-white text-gray-800 hover:bg-gray-100 shadow-lg"
+            className="clean-button bg-orange-500 text-white hover:bg-orange-600"
           >
             🎁 Start Helping
           </Button>
-          <p className="text-xs text-white/70 mt-3">
+          <p className="text-xs text-gray-500 mt-3">
             Complete tasks to donate symbolic dollars - no real money involved
           </p>
         </div>
