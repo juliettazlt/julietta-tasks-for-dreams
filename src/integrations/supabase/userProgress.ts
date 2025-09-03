@@ -104,4 +104,15 @@ export class UserProgressService {
     if (error) throw error;
     return data?.reduce((sum, row) => sum + row.total_points, 0) || 0;
   }
+
+  // Get count of users who have contributed (have points > 0)
+  static async getHelpersCount(): Promise<number> {
+    const { data, error } = await supabase
+      .from('user_progress')
+      .select('user_id')
+      .gt('total_points', 0);
+
+    if (error) throw error;
+    return data?.length || 0;
+  }
 }
