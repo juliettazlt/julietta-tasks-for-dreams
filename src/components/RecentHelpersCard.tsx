@@ -32,8 +32,7 @@ export const RecentHelpersCard = () => {
           name,
           updated_at
         `)
-        .order('updated_at', { ascending: false })
-        .limit(5);
+        .order('updated_at', { ascending: false });
 
       if (error) throw error;
 
@@ -78,7 +77,7 @@ export const RecentHelpersCard = () => {
     return (
       <Card className="clean-card">
         <CardHeader>
-          <CardTitle className="text-lg">🌟 Recent Helpers</CardTitle>
+          <CardTitle className="text-lg">🌟 All Helpers</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -100,12 +99,12 @@ export const RecentHelpersCard = () => {
   return (
     <Card className="clean-card">
       <CardHeader>
-        <CardTitle className="text-lg">🌟 Recent Helpers</CardTitle>
-        <p className="text-sm text-gray-500">Latest contributors to Julietta's dreams</p>
+        <CardTitle className="text-lg">🌟 All Helpers</CardTitle>
+        <p className="text-sm text-gray-500">All contributors to Julietta's dreams</p>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {recentHelpers.length > 0 ? (
+                          <CardContent>
+        <div className="space-y-4 max-h-64 overflow-y-auto">
+                  {recentHelpers.length > 0 ? (
             recentHelpers.map((helper) => (
               <div key={helper.id} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
