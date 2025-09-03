@@ -26,7 +26,7 @@ export const HeroCard = ({ totalRaised, goal, helpersCount, onDonate }: HeroCard
     if (!isHovered) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 5000);
+      }, 2500); // Change image every 2.5 seconds
 
       return () => clearInterval(interval);
     }
