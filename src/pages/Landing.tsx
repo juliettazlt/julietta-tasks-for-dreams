@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 // Mock data for the landing page demo
 const mockMilestones = [
-  { id: 1, title: "Be brave and curious", threshold: 50 },
-  { id: 2, title: "Pet a capybara", threshold: 100 },
+  { id: 1, title: "Pet a capybara", threshold: 50 },
+  { id: 2, title: "Be brave and curious", threshold: 100 },
   { id: 3, title: "Learn to sew and make clothes", threshold: 300 },
   { id: 4, title: "Travel to visit at least 3 friends", threshold: 500 },
   { id: 5, title: "Get yoga teacher certification", threshold: 750 },
