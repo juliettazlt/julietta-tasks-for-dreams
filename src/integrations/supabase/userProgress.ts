@@ -32,6 +32,22 @@ export class UserProgressService {
     return data;
   }
 
+  // Create or update user progress with name
+  static async createUserProgress(userId: string, name: string): Promise<UserProgress> {
+    const { data, error } = await supabase
+      .from('user_progress')
+      .upsert({
+        user_id: userId,
+        name: name,
+        total_points: 0
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
   // Get completed tasks for a user
   static async getCompletedTasks(userId: string): Promise<CompletedTask[]> {
     const { data, error } = await supabase
@@ -44,7 +60,7 @@ export class UserProgressService {
   }
 
   // Complete a task for a user
-  static async completeTask(userId: string, taskId: number, points: number): Promise<void> {
+  static async completeTask(userId: string, taskId: number, points: number, userName?: string): Promise<void> {
     // Check if task is already completed
     const { data: existingTask } = await supabase
       .from('completed_tasks')
@@ -68,9 +84,13 @@ export class UserProgressService {
 
     if (taskError) throw taskError;
 
-    // Update user progress using RPC function
+    // Update user progress using RPC function with name
     const { error: progressError } = await supabase
-      .rpc('increment_points', { user_id: userId, points: points });
+      .rpc('increment_points', { 
+        user_id: userId, 
+        points: points,
+        user_name: userName || null
+      });
 
     if (progressError) throw progressError;
   }

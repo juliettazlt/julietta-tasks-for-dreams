@@ -29,6 +29,7 @@ export const RecentHelpersCard = () => {
         .select(`
           user_id,
           total_points,
+          name,
           updated_at
         `)
         .order('updated_at', { ascending: false })
@@ -36,10 +37,10 @@ export const RecentHelpersCard = () => {
 
       if (error) throw error;
 
-      // Create helpers list with generic names for privacy
+      // Create helpers list with real names or fallback to generic names
       const helpers: RecentHelper[] = (userProgress || []).map((progress, index) => ({
         id: progress.user_id,
-        name: `Helper ${index + 1}`, // Use generic names for privacy
+        name: progress.name || `Helper ${index + 1}`, // Use real name or fallback to generic
         total_points: progress.total_points,
         last_activity: progress.updated_at
       }));
@@ -107,14 +108,14 @@ export const RecentHelpersCard = () => {
           {recentHelpers.length > 0 ? (
             recentHelpers.map((helper) => (
               <div key={helper.id} className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-8 h-8">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <Avatar className="w-8 h-8 flex-shrink-0">
                     <AvatarFallback className="bg-orange-100 text-orange-600 text-xs">
                       {getInitials(helper.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 truncate max-w-[120px]">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
                       {helper.name}
                     </p>
                     <p className="text-xs text-gray-500">
@@ -122,9 +123,11 @@ export const RecentHelpersCard = () => {
                     </p>
                   </div>
                 </div>
-                <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs">
-                  ${helper.total_points}
-                </Badge>
+                <div className="flex-shrink-0 ml-3">
+                  <Badge className="bg-orange-100 text-orange-700 border-orange-200 text-xs font-medium">
+                    ${helper.total_points}
+                  </Badge>
+                </div>
               </div>
             ))
           ) : (

@@ -87,6 +87,7 @@ const Index = () => {
   const [tasks, setTasks] = useState(initialTasks);
   const [totalPoints, setTotalPoints] = useState(250);
   const [userPoints, setUserPoints] = useState(0);
+  const [userName, setUserName] = useState<string | null>(null);
   const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
   const [completedTaskIds, setCompletedTaskIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,6 +107,7 @@ const Index = () => {
       // Load user progress
       const userProgress = await UserProgressService.getUserProgress(user!.id);
       setUserPoints(userProgress.total_points);
+      setUserName(userProgress.name);
       
       // Load completed tasks
       const completedTasks = await UserProgressService.getCompletedTasks(user!.id);
@@ -150,7 +152,7 @@ const Index = () => {
       if (!task) return;
 
       // Complete task in backend
-      await UserProgressService.completeTask(user.id, taskId, task.points);
+      await UserProgressService.completeTask(user.id, taskId, task.points, userName || undefined);
       
       // Update local state
       setTasks(prevTasks => 
@@ -207,7 +209,9 @@ const Index = () => {
         {/* Header with user info and sign out */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-xl font-semibold">Welcome back!</h2>
+            <h2 className="text-xl font-semibold">
+              Welcome back{userName ? `, ${userName}` : ''}!
+            </h2>
             <p className="text-muted-foreground">{user?.email}</p>
             <p className="text-sm text-orange-600">Your contribution: ${userPoints}</p>
           </div>
