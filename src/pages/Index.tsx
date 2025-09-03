@@ -85,7 +85,7 @@ const mockTodos = [
 const Index = () => {
   const { user, signOut } = useAuth();
   const [tasks, setTasks] = useState(initialTasks);
-  const [totalPoints, setTotalPoints] = useState(250);
+  const [totalPoints, setTotalPoints] = useState(50);
   const [userPoints, setUserPoints] = useState(0);
   const [userName, setUserName] = useState<string | null>(null);
   const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
@@ -124,7 +124,7 @@ const Index = () => {
       
       // Load total points across all users
       const totalPoints = await UserProgressService.getTotalPoints();
-      setTotalPoints(250 + totalPoints); // Base 250 + user contributions
+      setTotalPoints(50 + totalPoints); // Base 50 + user contributions
       
     } catch (error) {
       console.error('Error loading user data:', error);
