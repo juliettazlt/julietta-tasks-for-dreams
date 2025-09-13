@@ -1,73 +1,186 @@
-# Welcome to your Lovable project
+# 🎂 Julietta's Birthday App
 
-## Project info
+A fun, task-based milestone tracker that helps friends contribute to Julietta's 24th birthday dreams! Complete daily tasks to unlock symbolic donations and help make birthday wishes come true.
 
-**URL**: https://lovable.dev/projects/407680fd-ed40-41b7-b638-5327c387ffac
+## 🌟 What is this?
 
-## How can I edit this code?
+Think GoFundMe meets gamification! Instead of asking for real money, friends complete fun daily tasks (like running, taking selfies, logging mood) to earn symbolic "dollars" that contribute to Julietta's birthday wishlist. Each completed task unlocks the next milestone goal.
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+### 🎯 **Task-Based Donations**
+- **Daily Run** (Gatekeeper) - Complete to unlock all other tasks (+$50)
+- **Post-Workout Selfie** - Send a selfie to Julietta (+$50)
+- **Mood Check** - Log your daily mood with emojis (+$50)
+- **Personal To-Do** - Add items to your personal task list (+$50)
+- **Weather Log** - Share what the weather's like where you are (+$50)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/407680fd-ed40-41b7-b638-5327c387ffac) and start prompting.
+### 🏆 **Milestone System**
+- **$50** - Pet a capybara 🦫
+- **$100** - Be brave and curious ✨
+- **$300** - Learn to sew and make clothes 👗
+- **$500** - Travel to visit at least 3 friends worldwide ✈️
+- **$750** - Get yoga teacher certification 🧘‍♀️
+- **$1000** - Move to NYC 🗽
 
-Changes made via Lovable will be committed automatically to this repo.
+### 👥 **Community Features**
+- **All Helpers Board** - See everyone who's contributed
+- **Real-time Progress** - Watch the total grow as friends complete tasks
+- **Personal Dashboard** - Track your own contributions and progress
 
-**Use your preferred IDE**
+## 🚀 Live Demo
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Production URL:** https://julietta0903-24-dmp1szrnq-juliettas-projects.vercel.app
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠️ Tech Stack
 
-Follow these steps:
+- **Frontend:** React 18 + TypeScript + Vite
+- **Styling:** Tailwind CSS + shadcn/ui components
+- **Backend:** Supabase (Database + Authentication)
+- **Deployment:** Vercel
+- **Icons:** Lucide React
+- **Notifications:** Sonner
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🏗️ Project Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui base components
+│   ├── HeroCard.tsx    # Main hero section with carousel
+│   ├── TaskCard.tsx    # Individual task components
+│   ├── MilestoneCard.tsx # Goal/milestone display
+│   └── RecentHelpersCard.tsx # Community contributors
+├── pages/              # Main application pages
+│   ├── Landing.tsx     # Public landing page
+│   ├── Index.tsx       # Authenticated dashboard
+│   └── Auth.tsx        # Login/signup page
+├── integrations/       # External service integrations
+│   └── supabase/       # Database and auth setup
+└── contexts/           # React context providers
+    └── AuthContext.tsx # Authentication state
 ```
 
-**Edit a file directly in GitHub**
+## 🚀 Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account (for backend)
 
-**Use GitHub Codespaces**
+### Installation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/juliettazlt/julietta-tasks-for-dreams.git
+   cd julietta-tasks-for-dreams
+   ```
 
-## What technologies are used for this project?
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-This project is built with:
+3. **Set up environment variables**
+   Create a `.env.local` file:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. **Set up Supabase database**
+   Run the migration scripts in `supabase/migrations/`:
+   - `001_create_user_progress_tables.sql`
+   - `002_add_user_name_field.sql`
 
-## How can I deploy this project?
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/407680fd-ed40-41b7-b638-5327c387ffac) and click on Share -> Publish.
+6. **Open your browser**
+   Navigate to `http://localhost:5173` (or the port shown in terminal)
 
-## Can I connect a custom domain to my Lovable project?
+## 🎮 How It Works
 
-Yes, you can!
+### User Flow
+1. **Landing Page** → See the fundraiser overview and goals
+2. **Sign Up/Login** → Create account with your name
+3. **Dashboard** → Complete the "Daily Run" task to unlock others
+4. **Task Completion** → Each task earns $50 toward the total
+5. **Milestone Unlocking** → Watch goals unlock as the total grows
+6. **Community** → See all helpers and their contributions
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Task System
+- **Gatekeeper Logic:** Must complete "Daily Run" first to unlock other tasks
+- **One-time Completion:** Each task can only be completed once per user
+- **Real-time Updates:** Progress syncs across all users instantly
+- **Persistent Data:** Your progress is saved and restored on login
+- **Interactive Modals:** Each task has custom completion flows (mood selection, weather logging, etc.)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🎨 Design Philosophy
+
+**Clean Notes App Aesthetic:**
+- Light, minimal backgrounds
+- Subtle shadows and clean cards
+- Orange accent colors
+- Modern, friendly typography
+- Mobile-first responsive design
+
+## 🔧 Development
+
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### Key Components
+
+**HeroCard** - Main landing section with image carousel and progress display
+**TaskCard** - Individual task with completion logic and modals
+**MilestoneCard** - Goal tracking with unlock animations
+**RecentHelpersCard** - Community contributors with scrollable list
+
+## 🚀 Deployment
+
+The app is automatically deployed to Vercel on every push to main branch.
+
+**Manual deployment:**
+```bash
+vercel --prod
+```
+
+## 🤝 Contributing
+
+This is a personal birthday project, but feel free to:
+- Report bugs or issues
+- Suggest new features
+- Fork for your own birthday celebrations!
+
+## 📱 Mobile Support
+
+Fully responsive design optimized for:
+- Mobile phones (primary use case)
+- Tablets
+- Desktop browsers
+
+## 🎉 Special Features
+
+- **SMS Integration** - Selfie task opens native messaging app with pre-filled message
+- **Image Carousel** - Rotating background images on hero section
+- **Smooth Animations** - Unlock animations and transitions
+- **Toast Notifications** - Real-time feedback for task completion
+- **Scroll Navigation** - Smooth scrolling between sections
+- **Interactive Task Modals** - Custom completion flows for each task type
+- **Mood & Weather Logging** - Visual selection interfaces with emojis
+- **Locked Task System** - Tasks unlock progressively after completing the gatekeeper
+
+## 📄 License
+
+This project is for personal use. Feel free to use as inspiration for your own birthday celebrations!
+
+---
+
+**Made with ❤️ for Julietta's 24th Birthday**
+
+*Help make birthday dreams come true, one task at a time!* 🎂✨
